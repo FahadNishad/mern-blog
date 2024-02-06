@@ -3,10 +3,11 @@ import {Routes, Route, BrowserRouter} from 'react-router-dom'
 import Home from './Pages/Home'
 import About from './Pages/About'
 import Signin from './Pages/Signin'
-import Signup from './Pages/Signup'
+import Signup from './Pages/SignUp'
 import Dashboard from './Pages/Dashboard'
 import Projects from './Pages/Projects'
 import Header from './components/Header'
+import Footer from './components/Footer'
 const App = () => {
   return (
     <BrowserRouter >
@@ -19,6 +20,7 @@ const App = () => {
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/projects' element={<Projects/>}/>
     </Routes>
+    <Footer/>
     </BrowserRouter>
   )
 }

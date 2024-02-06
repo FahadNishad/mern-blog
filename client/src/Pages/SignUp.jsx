@@ -2,7 +2,7 @@ import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const SignUp = () => {
   const [formData, setformData] = useState({});
   const [errormessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -120,4 +120,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUp;
