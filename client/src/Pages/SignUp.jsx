@@ -1,11 +1,13 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setformData] = useState({});
   const [errormessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
     setformData({ ...formData, [e.target.id]: e.target.value.trim() });
