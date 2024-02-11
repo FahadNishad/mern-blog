@@ -1,15 +1,15 @@
-import { Alert, Button, Modal, ModalBody, TextInput } from 'flowbite-react';
-import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Alert, Button, Modal, ModalBody, TextInput } from "flowbite-react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../firebase';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+} from "firebase/storage";
+import { app } from "../firebase";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import {
   updateStart,
   updateSuccess,
@@ -17,9 +17,11 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
-} from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';const DashProfile = () => {
+  signOutSuccess,
+} from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+const DashProfile = () => {
   const { currentUser, error } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
@@ -134,7 +136,7 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';const DashProfile = 
     try {
       dispatch(deleteUserStart());
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       const data = await res.json();
       if (!res.ok) {
@@ -144,6 +146,21 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';const DashProfile = 
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signOutSuccess())
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
   return (
@@ -223,7 +240,9 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';const DashProfile = 
         <span className="cursor-pointer" onClick={() => setShowModal(true)}>
           Delete Account
         </span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span className="cursor-pointer" onClick={handleSignOut}>
+          Sign Out
+        </span>
       </div>
       {updateUserSuccess && (
         <Alert color="success" className="mt-5">
