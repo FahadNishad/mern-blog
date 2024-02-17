@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from "flowbite-react";
+import { Button, Modal, Spinner, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -11,20 +11,23 @@ const DashUsers = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState("");
-
+  const [loadig, setLoading] = useState(true);
   console.log(users);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true)
         const res = await fetch(`/api/user/getusers`);
         const data = await res.json();
         if (res.ok) {
+          setLoading(false)
           setUsers(data.users);
           if (data.users.length < 9) {
             setShowMore(false);
           }
         }
       } catch (error) {
+        setLoading(false)
         console.log(error);
       }
     };
@@ -65,6 +68,11 @@ const DashUsers = () => {
   };
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      {loadig && (
+        <div className="flex justify-center items-center min-h-screen">
+          <Spinner size="xl" />
+        </div>
+      )}
       {currentUser.isAdmin && users.length > 0 ? (
         <>
           <Table hoverable className="shadow-md">

@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from "flowbite-react";
+import { Button, Modal, Spinner, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
@@ -9,20 +9,24 @@ const DashPosts = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [loadig, setLoading] = useState(true);
 
   console.log(userPosts);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
         const data = await res.json();
         if (res.ok) {
+          setLoading(false);
           setUserPosts(data.posts);
           if (data.posts.length < 9) {
             setShowMore(false);
           }
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
@@ -30,6 +34,7 @@ const DashPosts = () => {
       fetchPosts();
     }
   }, [currentUser._id]);
+  
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
@@ -68,8 +73,16 @@ const DashPosts = () => {
       console.log(error.message);
     }
   };
+  
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      {loadig && (
+        
+          <div className="flex justify-center items-center min-h-screen">
+            <Spinner size="xl" />
+          </div>
+        
+      )}
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md">
@@ -84,7 +97,7 @@ const DashPosts = () => {
               </Table.HeadCell>
             </Table.Head>
             {userPosts.map((post) => (
-              <Table.Body className="divide-y">
+              <Table.Body className="divide-y" key={post._id}>
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
                     {new Date(post.updatedAt).toLocaleDateString()}
