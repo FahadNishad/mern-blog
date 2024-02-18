@@ -74,7 +74,7 @@ export const signout = (req, res, next) => {
       .clearCookie("access_token")
       .status(200)
       .json("User has been signed out");
-  } catch (error) { 
+  } catch (error) {
     next(error);
   }
 };
@@ -112,6 +112,19 @@ export const getUsers = async (req, res, next) => {
       totalUser,
       lastMonthUsers,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
   } catch (error) {
     next(error);
   }
